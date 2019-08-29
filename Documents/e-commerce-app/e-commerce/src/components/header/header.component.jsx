@@ -5,10 +5,12 @@ import {ReactComponent as Logo} from '../../assets/logo.svg';
 import {Link} from 'react-router-dom';
 import {auth} from '../../firebase/firebase.utils';
 import {connect} from 'react-redux';
+import {createStructuredSelector } from 'reselect';
 
 import CartIcon from '../cart-icon/cart-icon.component';
 import CartDropdown from '../cart-droppdown/cart-dropdown.component'; 
-
+import {selectCartHidden} from '../../redux/cart/cart.selectors';
+import {selectCurrentUser} from '../../redux/user/user.selectors';
 // el currentUser lo recibe del reducer 
 const Header = ({currentUser,hidden}) =>(
     <div className='header'>
@@ -37,9 +39,21 @@ const Header = ({currentUser,hidden}) =>(
     currentUser: state.user.currentUser
 })*/
 // mejor manera de hacerlo es la siguiente ( de user quiero current user, y de cart quiero hidden)
-const mapStateToProps = ({user:{currentUser},cart:{hidden}}) =>({
+
+/*const mapStateToProps = ({user:{currentUser},cart:{hidden}}) =>({
     currentUser,
     hidden
+})
+ cambiaría a :
+ const mapStateToProps = (state) =>({
+    currentUser:selectCurrentUser(state),
+    hidden:selectCartHidden(state)
+})
+pero existe el structure selector  ---->
+*/
+const mapStateToProps = createStructuredSelector({
+    currentUser:selectCurrentUser,
+    hidden:selectCartHidden
 })
 
 export default connect(mapStateToProps)(Header);
